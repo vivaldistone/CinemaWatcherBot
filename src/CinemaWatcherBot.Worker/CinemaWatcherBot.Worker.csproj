@@ -6,4 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CinemaWatcherBot.Application\CinemaWatcherBot.Application.csproj" />
+    <ProjectReference Include="..\CinemaWatcherBot.Domain\CinemaWatcherBot.Domain.csproj" />
+    <ProjectReference Include="..\CinemaWatcherBot.Infrastructure\CinemaWatcherBot.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

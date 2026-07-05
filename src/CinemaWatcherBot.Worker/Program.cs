@@ -1,4 +1,11 @@
+using CinemaWatcherBot.Infrastructure;
+using CinemaWatcherBot.Worker.BackgroundServices;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddInfrastructure();
+
+builder.Services.AddHostedService<ParserBackgroundService>();
 
 var app = builder.Build();
 
