@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/CinemaWatcherBot.Application/CinemaWatcherBot.Application.csproj" Id="5f879ffb-7ab8-49bd-92de-0126e6cf3fd1" />
+  <Project Path="src/CinemaWatcherBot.Domain/CinemaWatcherBot.Domain.csproj" Id="f7897dfe-49e5-46fd-bb00-c7f9c2a891f4" />
+  <Project Path="src/CinemaWatcherBot.Infrastructure/CinemaWatcherBot.Infrastructure.csproj" Id="5df6a00d-010d-4031-9933-10a024da6829" />
+  <Project Path="src/CinemaWatcherBot.Worker/CinemaWatcherBot.Worker.csproj" Id="3b933f04-144d-44ec-baf4-ea6e13070412" />
+</Solution>
