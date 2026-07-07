@@ -10,7 +10,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services)
     {
-        services.AddScoped<ICinemaParser, PlaywrightCinemaParser>();
+        services.AddScoped<ICinemaParser, SilverCinemaParser>();
 
         services.AddSingleton<IPlaywrightBrowserFactory, PlaywrightBrowserFactory>();
 
