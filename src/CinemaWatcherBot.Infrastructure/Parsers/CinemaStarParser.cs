@@ -1,5 +1,5 @@
 ﻿using CinemaWatcherBot.Application.Abstractions.Parsing;
-using CinemaWatcherBot.Application.Models;
+using CinemaWatcherBot.Application.Contracts;
 
 namespace CinemaWatcherBot.Infrastructure.Parsers;
 

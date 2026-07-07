@@ -1,4 +1,4 @@
-﻿using CinemaWatcherBot.Application.Models;
+﻿using CinemaWatcherBot.Application.Contracts;
 
 namespace CinemaWatcherBot.Application.Abstractions.Parsing;
 
