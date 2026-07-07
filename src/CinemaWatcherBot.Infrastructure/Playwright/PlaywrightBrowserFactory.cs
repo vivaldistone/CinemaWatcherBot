@@ -4,14 +4,20 @@ namespace CinemaWatcherBot.Infrastructure.Playwright;
 
 public class PlaywrightBrowserFactory : IPlaywrightBrowserFactory
 {
-    public async Task<IBrowser> CreateAsync(CancellationToken token = default)
+    private IBrowser? _browser;
+    public async Task<IBrowser> GetAsync(CancellationToken token = default)
     {
+        if (_browser is not null)
+            return _browser;
+
         var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
 
-        return await playwright.Chromium.LaunchAsync(
+        _browser =  await playwright.Chromium.LaunchAsync(
             new BrowserTypeLaunchOptions
             {
                 Headless = true
             });
+
+        return _browser;
     }
 }
