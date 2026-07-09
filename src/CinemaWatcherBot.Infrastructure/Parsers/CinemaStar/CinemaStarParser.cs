@@ -57,7 +57,6 @@ public class CinemaStarParser : ICinemaParser
                 Название: {movie.DisplayName}
                 Длительность: {movie.Duration} мин
                 Жанры: {string.Join(", ", movie.Genres)}
-                Даты: {string.Join(", ", movie.Dates)}
                 Возраст: {movie.Age}+
                 -------------------------
                 """);
