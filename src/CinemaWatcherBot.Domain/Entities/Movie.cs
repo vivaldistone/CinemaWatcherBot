@@ -1,0 +1,22 @@
+﻿namespace CinemaWatcherBot.Domain.Entities;
+
+public class Movie
+{
+    public Guid Id { get; private set; }
+    public int ExternalId { get; private set; }
+    public string Title { get; private set; } = string.Empty;
+    public int Duration { get; private set; }
+    public int Age { get; private set; }
+    public ICollection<Genre> Genres { get; private set; } = [];
+
+    private Movie() { }
+
+    public Movie(int externalId, string title, int duration, int age)
+    {
+        Id = Guid.NewGuid();
+        ExternalId = externalId;
+        Title = title;
+        Duration = duration;
+        Age = age;
+    }
+}
