@@ -1,10 +1,10 @@
-﻿using CinemaWatcherBot.Application.Contracts;
+﻿using CinemaWatcherBot.Domain.Entities;
 
 namespace CinemaWatcherBot.Application.Abstractions.Parsing;
 
 public interface ICinemaParser
 {
     string CinemaName { get; }
-    Task<IReadOnlyCollection<MovieSession>> ParseAsync(
+    Task<IReadOnlyCollection<Movie>> ParseAsync(
         CancellationToken cancellationToken = default);
 }

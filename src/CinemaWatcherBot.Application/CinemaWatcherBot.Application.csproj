@@ -10,4 +10,8 @@
     <ProjectReference Include="..\CinemaWatcherBot.Domain\CinemaWatcherBot.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+  </ItemGroup>
+
 </Project>

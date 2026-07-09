@@ -3,9 +3,8 @@ using Microsoft.Extensions.Logging;
 
 namespace CinemaWatcherBot.Infrastructure.Parsing;
 
-public class PlaywrightCinemaParser
-    (ILogger<PlaywrightCinemaParser> logger) 
-    : ICinemaParser
+public class SilverCinemaParser
+    (ILogger<SilverCinemaParser> logger) 
 {
     public Task ParseAsync(CancellationToken cancellationToken)
     {
