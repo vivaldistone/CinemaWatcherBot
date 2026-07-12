@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CinemaWatcherBot.Infrastructure.Parsers.CinemaStar;
 
-public class CinemaStarParser : ICinemaParser
+public class CinemaStarParserMovies : ICinemaParser
 {
     private const string urlCinema = "https://cinemastar.ru/films";
     public string CinemaName => "Синема Стар";
@@ -20,7 +20,7 @@ public class CinemaStarParser : ICinemaParser
     private readonly IPlaywrightBrowserFactory _browsersFactory;
     private readonly IServiceScopeFactory _scopeFactory;
 
-    public CinemaStarParser(
+    public CinemaStarParserMovies(
         IPlaywrightBrowserFactory browsersFactory,
         IServiceScopeFactory scopeFactory)
     {
