@@ -1,7 +1,10 @@
 ﻿using CinemaWatcherBot.Application.Abstractions.Parsing;
+using CinemaWatcherBot.Application.Abstractions.Persistence;
+using CinemaWatcherBot.Application.Abstractions.Persistence.Repository;
 using CinemaWatcherBot.Infrastructure.Parsers.CinemaStar;
 using CinemaWatcherBot.Infrastructure.Parsing;
 using CinemaWatcherBot.Infrastructure.Persistence;
+using CinemaWatcherBot.Infrastructure.Persistence.Repositories;
 using CinemaWatcherBot.Infrastructure.Playwright;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +25,10 @@ public static class DependencyInjection
 
         services.AddDbContext<AppDbContext>(builderOptions =>
             builderOptions.UseNpgsql(connectionString));
+
+        services.AddScoped<IMovieRepository, MovieRepository>();
+        services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

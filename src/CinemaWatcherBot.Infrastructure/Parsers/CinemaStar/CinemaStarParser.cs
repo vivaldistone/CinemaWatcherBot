@@ -5,6 +5,10 @@ using CinemaWatcherBot.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
 using System.Text.Json;
+using CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Mapping;
+using CinemaWatcherBot.Application.Abstractions.Persistence.Repository;
+using CinemaWatcherBot.Application.Abstractions.Persistence;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CinemaWatcherBot.Infrastructure.Parsers.CinemaStar;
 
@@ -14,33 +18,19 @@ public class CinemaStarParser : ICinemaParser
     public string CinemaName => "Синема Стар";
     
     private readonly IPlaywrightBrowserFactory _browsersFactory;
-    private readonly ILogger<CinemaStarParser> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public CinemaStarParser(
         IPlaywrightBrowserFactory browsersFactory,
-        ILogger<CinemaStarParser> logger)
+        IServiceScopeFactory scopeFactory)
     {
         _browsersFactory = browsersFactory;
-        _logger = logger;
+        _scopeFactory = scopeFactory;
     }
 
-    public async Task<IReadOnlyCollection<Movie>> ParseAsync(CancellationToken cancellationToken = default)
-    {
-        var browser = await _browsersFactory
-            .GetAsync(cancellationToken);
-
-        await using var context = await browser.NewContextAsync();
-
-        var page = await context.NewPageAsync();
-
-        await PreparePageAsync(page);
-
-        var response = await 
-            page.Context
-            .APIRequest
-            .GetAsync("https://api.cinemastar.ru/data/5");
-
-        var json = await response.TextAsync();
+    public async Task ImportAsync(CancellationToken cancellationToken = default)
+    {    
+        var json = await PrepareJsonAsync(cancellationToken);
 
         var result = JsonSerializer.Deserialize<CinemaStarApiResponse>(json,
             new JsonSerializerOptions
@@ -49,21 +39,72 @@ public class CinemaStarParser : ICinemaParser
             })
             ?? throw new Exception("Не удалось распарсить JSON");
 
-        foreach (var movie in result.Data.Movie)
+        await using var scope = _scopeFactory.CreateAsyncScope();
+
+        var movieRepository = scope.ServiceProvider.GetRequiredService<IMovieRepository>();
+        var genreRepository = scope.ServiceProvider.GetRequiredService<IGenreRepository>();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+        var moviesDtos = result.Data.Movies;
+
+        var existingExternalIds = (await movieRepository.GetExternalIdsAsync(cancellationToken))
+            .ToHashSet();
+
+        var genres = await ImportGenresAsync(
+            moviesDtos, 
+            genreRepository,
+            cancellationToken
+            );
+
+        foreach (var movieDto in moviesDtos)
         {
-            Console.WriteLine($"""
-                -------------------------
-                Id: {movie.Id}
-                Название: {movie.DisplayName}
-                Длительность: {movie.Duration} мин
-                Жанры: {string.Join(", ", movie.Genres)}
-                Возраст: {movie.Age}+
-                -------------------------
-                """);
+            var movie = CinemaStarMovieMapper.Map(movieDto);
+          
+            if (existingExternalIds.Contains(movie.ExternalId))
+                continue;
+
+
+            foreach (var genreName in movieDto.Genres)
+            {
+                if (string.IsNullOrWhiteSpace(genreName))
+                    continue;
+
+                movie.AddGenre(genres[genreName]);
+            }
+            
+            await movieRepository.AddAsync(movie);
+        }
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<Dictionary<string, Genre>> ImportGenresAsync(List<CinemaStarMovieDto> movieDTOs, 
+        IGenreRepository genreRepository,
+        CancellationToken cancellationToken = default)
+    {
+        var genreNames = movieDTOs
+            .SelectMany(x => x.Genres)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var genres = (await genreRepository.GetAllAsync(cancellationToken))
+            .ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var genreName in genreNames)
+        {
+            if (genres.ContainsKey(genreName))
+                continue;
+
+            var genre = new Genre(genreName);
+
+            await genreRepository.AddAsync(genre, cancellationToken);
+
+            genres.Add(genre.Name, genre);
         }
 
-        return [];
+        return genres;
     }
+
 
     private async Task PreparePageAsync(IPage page)
     {
@@ -74,5 +115,24 @@ public class CinemaStarParser : ICinemaParser
             JSON.stringify({ value: 5, expiry: 1783615326862 }));");
 
         await page.ReloadAsync();
+    }
+    
+    private async Task<string> PrepareJsonAsync(CancellationToken cancellationToken = default)
+    {
+        var browser = await _browsersFactory
+            .GetAsync(cancellationToken);
+
+        await using var context = await browser.NewContextAsync();
+
+        var page = await context.NewPageAsync();
+
+        await PreparePageAsync(page);
+
+        var response = await
+            page.Context
+            .APIRequest
+            .GetAsync("https://api.cinemastar.ru/data/5");
+
+        return await response.TextAsync();
     }
 }

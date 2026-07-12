@@ -1,6 +1,9 @@
-﻿namespace CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Dtos;
+﻿using System.Text.Json.Serialization;
+
+namespace CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Dtos;
 
 public sealed class CinemaStarDataResponse
 {
-    public List<CinemaStarMovieDto> Movie { get; init; } = [];
+    [JsonPropertyName("movie")]
+    public List<CinemaStarMovieDto> Movies { get; init; } = [];
 }
