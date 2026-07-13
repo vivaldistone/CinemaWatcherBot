@@ -1,5 +1,4 @@
 ﻿using CinemaWatcherBot.Application.Abstractions.Parsing;
-using CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Dtos;
 using CinemaWatcherBot.Infrastructure.Playwright;
 using CinemaWatcherBot.Domain.Entities;
 using Microsoft.Extensions.Logging;
@@ -9,10 +8,11 @@ using CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Mapping;
 using CinemaWatcherBot.Application.Abstractions.Persistence.Repository;
 using CinemaWatcherBot.Application.Abstractions.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Dtos.Movie;
 
 namespace CinemaWatcherBot.Infrastructure.Parsers.CinemaStar;
 
-public class CinemaStarParserMovies : ICinemaParser
+public class CinemaStarParserMovies
 {
     private const string urlCinema = "https://cinemastar.ru/films";
     public string CinemaName => "Синема Стар";

@@ -1,4 +1,5 @@
 ﻿using CinemaWatcherBot.Domain.Entities;
+using System.Collections.ObjectModel;
 
 namespace CinemaWatcherBot.Application.Abstractions.Persistence.Repository;
 
@@ -6,6 +7,7 @@ public interface IMovieRepository
 {
     Task AddAsync(Movie movie, CancellationToken cancellationToken = default);
     Task<Movie?> GetAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Movie>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<List<Guid>> GetIdsAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<int>> GetExternalIdsAsync(CancellationToken cancellationToken = default);
     Task Delete(Movie movie);

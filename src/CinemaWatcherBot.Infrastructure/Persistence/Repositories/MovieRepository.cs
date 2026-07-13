@@ -1,6 +1,7 @@
 ﻿using CinemaWatcherBot.Application.Abstractions.Persistence.Repository;
 using CinemaWatcherBot.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 
 namespace CinemaWatcherBot.Infrastructure.Persistence.Repositories;
 
@@ -29,6 +30,11 @@ public class MovieRepository : IMovieRepository
     {
         return await _context.Movies
             .AnyAsync(m => m.Id == id, cancellationToken);
+    }
+
+    public async Task<IReadOnlyCollection<Movie>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Movies.ToListAsync(cancellationToken);
     }
 
     public async Task<Movie?> GetAsync(Guid id, CancellationToken cancellationToken = default)

@@ -1,5 +1,5 @@
 ﻿using CinemaWatcherBot.Domain.Entities;
-using CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Dtos;
+using CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Dtos.Movie;
 
 namespace CinemaWatcherBot.Infrastructure.Parsers.CinemaStar.Mapping;
 
