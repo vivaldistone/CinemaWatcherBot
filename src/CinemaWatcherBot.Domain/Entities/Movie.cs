@@ -10,6 +10,9 @@ public class Movie
     public ICollection<Genre> Genres { get; private set; } = [];
     public string  Url{ get; private set; }
 
+    private readonly List<MovieSession> _sessions = [];
+    public IReadOnlyCollection<MovieSession> Sessions => _sessions;
+
     private Movie() { }
 
     public Movie(

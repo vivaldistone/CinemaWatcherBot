@@ -7,6 +7,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<Movie> Movies => Set<Movie>();
     public DbSet<Genre> Genres => Set<Genre>();
+    public DbSet<MovieSession> MovieSessions => Set<MovieSession>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options) 
         : base(options) { }

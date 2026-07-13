@@ -73,6 +73,33 @@ namespace CinemaWatcherBot.Infrastructure.Persistence.Migrations
                     b.ToTable("Movies");
                 });
 
+            modelBuilder.Entity("CinemaWatcherBot.Domain.Entities.MovieSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Hall")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uuid");
+
+                    b.Property<TimeOnly>("Time")
+                        .HasColumnType("time without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieSessions", (string)null);
+                });
+
             modelBuilder.Entity("GenreMovie", b =>
                 {
                     b.Property<Guid>("GenresId")
@@ -88,6 +115,17 @@ namespace CinemaWatcherBot.Infrastructure.Persistence.Migrations
                     b.ToTable("MovieGenres", (string)null);
                 });
 
+            modelBuilder.Entity("CinemaWatcherBot.Domain.Entities.MovieSession", b =>
+                {
+                    b.HasOne("CinemaWatcherBot.Domain.Entities.Movie", "Movie")
+                        .WithMany("Sessions")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("GenreMovie", b =>
                 {
                     b.HasOne("CinemaWatcherBot.Domain.Entities.Genre", null)
@@ -101,6 +139,11 @@ namespace CinemaWatcherBot.Infrastructure.Persistence.Migrations
                         .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CinemaWatcherBot.Domain.Entities.Movie", b =>
+                {
+                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }
