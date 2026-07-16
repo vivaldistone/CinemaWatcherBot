@@ -14,7 +14,7 @@ public class ParserBackgroundService(
         while(!stoppingToken.IsCancellationRequested)
         {
             await parser.ImportAsync(stoppingToken);
-            await Task.Delay(20000);
+            await Task.Delay(TimeSpan.FromHours(12), stoppingToken);
         }
     }
 }

@@ -82,6 +82,9 @@ namespace CinemaWatcherBot.Infrastructure.Persistence.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
+                    b.Property<int>("ExternalId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Hall")
                         .IsRequired()
                         .HasMaxLength(100)
